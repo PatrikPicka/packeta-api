@@ -20,15 +20,15 @@ readonly class PacketaApi
 
 	public function callApi(string $method, JsonSerializable|array $data)
 	{
+		$xmlArrayData['apiPassword'] = $this->apiKey;
+
 		if ($data instanceof JsonSerializable) {
-			$xmlArrayData = $data->jsonSerialize();
+			$xmlArrayData = array_merge($xmlArrayData, $data->jsonSerialize());
 		} elseif (is_array($data)) {
-			$xmlArrayData = $data;
+			$xmlArrayData = array_merge($xmlArrayData, $data);
 		} else {
 			throw new InvalidArgumentException('PacketaApi Error: Expected json serializable object or array.');
 		}
-
-		$xmlArrayData['apiPassword'] = $this->apiKey;
 
 		$xmlData = Xml::ArrayToXml($method, $xmlArrayData);
 
