@@ -1,7 +1,8 @@
-./config.yaml
-./default.conf
-./docker-compose.yaml
-./Dockerfile
+config.yaml
+default.conf
+docker-compose.yaml
+Dockerfile
 index.php
 
 .idea
+/vendor/

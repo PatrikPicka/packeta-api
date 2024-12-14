@@ -1,0 +1,18 @@
+{
+  "name": "ptb/packeta-api",
+  "description": "PHP Rest/XML Api for Packeta",
+  "type": "library",
+  "autoload": {
+    "psr-4": {
+      "PTB\\PacketaApi\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "PTB - Patrik Picka"
+    }
+  ],
+  "require": {
+    "spatie/array-to-xml": "^3.3"
+  }
+}
