@@ -47,7 +47,7 @@ readonly class PickupPointPacketDataDto implements JsonSerializable
 					'height' => $this->height,
 				],
 				'name' => $this->recipientFirstName,
-				'lastname' => $this->recipientLastName,
+				'surname' => $this->recipientLastName,
 				'email' => $this->recipientEmail,
 				'phone' => $this->recipientPhone,
 				'eshop' => $this->eshop,
