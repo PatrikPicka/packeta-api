@@ -2,33 +2,40 @@
 
 declare(strict_types=1);
 
-namespace PTB\PacketaApi\Dto;
+namespace PTB\PacketaApi\Packet;
 
-use JsonSerializable;
+use PTB\PacketaApi\Common\RequestInterface;
 
-readonly class PickupPointPacketDataDto implements JsonSerializable
+readonly class CreatePacketRequest implements RequestInterface
 {
+	private const string METHOD = 'createPacket';
+
 	public function __construct(
-		public string $number,
+		protected string $number,
 		/** The Packeta pickup point ID returned from their widget */
-		public int $addressId,
+		protected int $addressId,
 		/** The Packeta pickup point code returned from their widget */
-		public string $carrierPickupPoint,
-		public float $value,
-		public ?float $cod,
-		public string $currency,
-		public float $weight,
-		public int $width,
-		public int $length,
-		public int $height,
-		public string $recipientFirstName,
-		public string $recipientLastName,
-		public string $recipientEmail,
-		public string $recipientPhone,
+		protected string $carrierPickupPoint,
+		protected float $value,
+		protected ?float $cod,
+		protected string $currency,
+		protected float $weight,
+		protected int $width,
+		protected int $length,
+		protected int $height,
+		protected string $recipientFirstName,
+		protected string $recipientLastName,
+		protected string $recipientEmail,
+		protected string $recipientPhone,
 		/** The Packeta senders indication */
-		public string $eshop,
-		public bool $adultContent = false,
+		protected string $eshop,
+		protected bool $adultContent = false,
 	) {
+	}
+
+	public function getMethod(): string
+	{
+		return self::METHOD;
 	}
 
 	public function jsonSerialize(): array

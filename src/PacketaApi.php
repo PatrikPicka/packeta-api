@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace PTB\PacketaApi;
 
 use Exception;
-use InvalidArgumentException;
-use JsonSerializable;
+use PTB\PacketaApi\Common\PdfResponse;
+use PTB\PacketaApi\Common\RequestInterface;
+use PTB\PacketaApi\Label\GetPacketLabelPdfRequest;
+use PTB\PacketaApi\Label\GetPacketsLabelsPdfRequest;
+use PTB\PacketaApi\Packet\PacketResponse;
 use PTB\PacketaApi\Utils\Xml;
 
 readonly class PacketaApi
@@ -18,19 +21,28 @@ readonly class PacketaApi
 	) {
 	}
 
-	public function callApi(string $method, JsonSerializable|array $data)
+	public function createPacket(RequestInterface $request): PacketResponse
+	{
+		return PacketResponse::fromArrayResponse($this->sendRequest($request));
+	}
+
+	public function getPacketLabelPdf(GetPacketLabelPdfRequest $request): PdfResponse
+	{
+		return PdfResponse::fromArrayResponse(['pdfContent' => $this->sendRequest($request)]);
+	}
+
+	public function getPacketsLabelsPdf(GetPacketsLabelsPdfRequest $request): PdfResponse
+	{
+		return PdfResponse::fromArrayResponse(['pdfContent' => $this->sendRequest($request)]);
+	}
+
+	private function sendRequest(RequestInterface $request): mixed
 	{
 		$xmlArrayData['apiPassword'] = $this->apiKey;
 
-		if ($data instanceof JsonSerializable) {
-			$xmlArrayData = array_merge($xmlArrayData, $data->jsonSerialize());
-		} elseif (is_array($data)) {
-			$xmlArrayData = array_merge($xmlArrayData, $data);
-		} else {
-			throw new InvalidArgumentException('PacketaApi Error: Expected json serializable object or array.');
-		}
+		$xmlArrayData = array_merge($xmlArrayData, $request->jsonSerialize());
 
-		$xmlData = Xml::ArrayToXml($method, $xmlArrayData);
+		$xmlData = Xml::ArrayToXml($request->getMethod(), $xmlArrayData);
 
 		$xmlResponse = $this->post($xmlData);
 		$arrayResult = Xml::XmlToArray($xmlResponse);
