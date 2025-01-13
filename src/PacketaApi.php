@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PTB\PacketaApi;
 
-use Exception;
+use PTB\PacketaApi\Exception\PacketaException;
 use PTB\PacketaApi\Common\PdfResponse;
 use PTB\PacketaApi\Common\RequestInterface;
 use PTB\PacketaApi\Label\GetPacketLabelPdfRequest;
@@ -68,22 +68,22 @@ readonly class PacketaApi
 		}
 
 		if (!isset($http_response_header)) {
-			throw new Exception('PacketaApi Error: Can\'t connect to packeta API service.');
+			throw new PacketaException('PacketaApi Error: Can\'t connect to packeta API service.');
 		}
 
 		if (empty($http_response_header)) {
-			throw new Exception('PacketaApi Error: Can\'t connect to packeta API service.');
+			throw new PacketaException('PacketaApi Error: Can\'t connect to packeta API service.');
 		}
 
 		preg_match("#HTTP/[0-9\.]+\s+([0-9]+)#", $http_response_header[0], $out);
-		throw new Exception('PacketaApi Error: Unsuccessful attempt to retrieve data from packeta API.', intval($out[1]));
+		throw new PacketaException('PacketaApi Error: Unsuccessful attempt to retrieve data from packeta API.', intval($out[1]));
 	}
 
 	private function processResult(array $result): void
 	{
 		if (($result['status'] ?? '') === 'fault') {
 			if ($result['fault'] === 'PacketAttributesFault') {
-				throw new Exception('PacketaApi Error: ' . $result['detail']['attributes']['fault']);
+				throw new PacketaException('PacketaApi Error: ' . $result['detail']['attributes']['fault']);
 			}
 
 			$resultFaultsInfo = [$result['fault'] . ': ' . ($result['string'] ?? 'Unknown error')];
@@ -92,9 +92,9 @@ readonly class PacketaApi
 				$resultFaultsInfo[] = PHP_EOL . 'Details: ' . json_encode($result['detail']);
 			}
 
-			throw new Exception('PacketaApi Error: ' . join('', $resultFaultsInfo));
+			throw new PacketaException('PacketaApi Error: ' . join('', $resultFaultsInfo));
 		} elseif (isset($result['result']) === false) {
-			throw new Exception('PacketaApi Error: There is no result in the response.');
+			throw new PacketaException('PacketaApi Error: There is no result in the response.');
 		}
 	}
 }

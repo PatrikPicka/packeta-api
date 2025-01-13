@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PTB\PacketaApi\Label;
 
-use InvalidArgumentException;
+use PTB\PacketaApi\Exception\PacketaException;
 use PTB\PacketaApi\Common\RequestInterface;
 use PTB\PacketaApi\Label\Enum\LabelFormatEnum;
 
@@ -20,7 +20,7 @@ class GetPacketLabelPdfRequest implements RequestInterface
 		int $offset = 0,
 	) {
 		if ($offset > $this->format->getMaxOffset()) {
-			throw new InvalidArgumentException(sprintf(
+			throw new PacketaException(sprintf(
 				'The max offset for given label format is %d',
 				$this->format->getMaxOffset(),
 			));

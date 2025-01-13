@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PTB\PacketaApi\Packet;
 
-use InvalidArgumentException;
+use PTB\PacketaApi\Exception\PacketaException;
 use PTB\PacketaApi\Common\ResponseInterface;
 
 readonly class PacketResponse implements ResponseInterface
@@ -22,7 +22,7 @@ readonly class PacketResponse implements ResponseInterface
 			isset($data['barcode']) === false ||
 			isset($data['barcodeText']) === false
 		) {
-			throw new InvalidArgumentException('PacketaApi Error: One of required "id", "barcode", "barcodeText" is missing in response.');
+			throw new PacketaException('PacketaApi Error: One of required "id", "barcode", "barcodeText" is missing in response.');
 		}
 
 		return new self(
