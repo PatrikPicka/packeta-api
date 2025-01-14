@@ -1,0 +1,28 @@
+version: '4.18.0'
+
+networks:
+  ptb-packeta-api:
+
+services:
+    php-service:
+      build:
+        context: ./
+        dockerfile: ./Dockerfile
+      container_name: ptb-packeta-api-php
+      volumes:
+        - ./:/var/www/project
+      networks:
+        - ptb-packeta-api
+
+    nginx-service:
+      image: nginx
+      container_name: ptb-packeta-api-nginx
+      volumes:
+        - ./:/var/www/project
+        - ./default.conf:/etc/nginx/conf.d/default.conf
+      ports:
+        - '8081:80'
+      depends_on:
+        - php-service
+      networks:
+        - ptb-packeta-api
