@@ -1,5 +1,3 @@
-version: '4.18.0'
-
 networks:
   ptb-packeta-api:
 
