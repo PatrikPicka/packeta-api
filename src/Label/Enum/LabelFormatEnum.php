@@ -7,6 +7,7 @@ namespace PTB\PacketaApi\Label\Enum;
 enum LabelFormatEnum: string
 {
 	case A6_ON_A4 = 'A6 on A4';
+	case A6_ON_A6 = 'A6 on A6';
 	case A7_ON_A4 = 'A7 on A4';
 	case A8_ON_A4 = 'A8 on A4';
 
