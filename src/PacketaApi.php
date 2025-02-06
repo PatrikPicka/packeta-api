@@ -9,6 +9,8 @@ use PTB\PacketaApi\Common\PdfResponse;
 use PTB\PacketaApi\Common\RequestInterface;
 use PTB\PacketaApi\Label\GetPacketLabelPdfRequest;
 use PTB\PacketaApi\Label\GetPacketsLabelsPdfRequest;
+use PTB\PacketaApi\Packet\Enum\PacketStatusEnum;
+use PTB\PacketaApi\Packet\GetPacketStatusRequest;
 use PTB\PacketaApi\Packet\PacketResponse;
 use PTB\PacketaApi\Utils\Xml;
 
@@ -24,6 +26,26 @@ readonly class PacketaApi
 	public function createPacket(RequestInterface $request): PacketResponse
 	{
 		return PacketResponse::fromArrayResponse($this->sendRequest($request));
+	}
+
+	public function getPacketStatus(GetPacketStatusRequest $request): PacketStatusEnum
+	{
+		$responseStatusCode = $this->sendRequest($request)['statusCode'];
+
+		$packetStatus = PacketStatusEnum::tryFrom((int) $responseStatusCode);
+
+		if ($packetStatus === null) {
+			throw new PacketaException(sprintf(
+				'Unsupported Packet Status: %s - Supported Packet Statuses: %s',
+				$responseStatusCode,
+				implode(', ', array_map(fn (
+					PacketStatusEnum $packetStatus): int => $packetStatus->value,
+					PacketStatusEnum::cases(),
+				))
+			));
+		}
+
+		return $packetStatus;
 	}
 
 	public function getPacketLabelPdf(GetPacketLabelPdfRequest $request): PdfResponse
